@@ -6,12 +6,12 @@
 #include <sys/param.h>
 #include <sys/types.h>
 #include <sys/ioctl.h>
+#include <sys/select.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
 #include <getopt.h>
-#include <poll.h>
 #include <signal.h>
 #include <string.h>
 #include <termios.h>
@@ -54,9 +54,9 @@ main(int argc, char **argv)
 {
 	char c, *shell;
 	struct opts opts;
-	struct pollfd pollfds[2];
 	struct winsize winsize;
 	struct termios termios;
+	fd_set fdset;
 
 	parseopts(argc, argv, &opts);
 
@@ -101,22 +101,25 @@ main(int argc, char **argv)
 		return -1;
 	}
 
-	pollfds[0].fd = STDIN_FILENO;
-	pollfds[0].events = POLLIN;
-	pollfds[1].fd = fdchild;
-	pollfds[1].events = POLLIN;
+	FD_ZERO(&fdset);
 
 	while (1) {
-		poll(pollfds, 2, 0);
+		FD_SET(STDIN_FILENO, &fdset);
+		FD_SET(fdchild, &fdset);
 
-		if (pollfds[0].revents) {
+		if (select(fdchild+1, &fdset, NULL, NULL, NULL) == -1) {
+			perror("select");
+			return 1;
+		}
+
+		if (FD_ISSET(STDIN_FILENO, &fdset)) {
 			if (read(STDIN_FILENO, &c, 1) != 1)
 				break;
 			if (write(fdchild, &c, 1) != 1)
 				break;
 		}
 
-		if (pollfds[1].revents) {
+		if (FD_ISSET(fdchild, &fdset)) {
 			if (read(fdchild, &c, 1) != 1)
 				break;
 			if (write(STDOUT_FILENO, &c, 1) != 1)
