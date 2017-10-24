@@ -65,9 +65,6 @@ main(int argc, char **argv)
 		return 1;
 	}
 
-	pollfds[0].fd = STDIN_FILENO;
-	pollfds[0].events = POLLIN;
-
 	if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &winsize) == -1) {
 		perror("TIOCGWINSZ ioctl");
 		return 1;
