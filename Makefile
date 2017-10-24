@@ -4,6 +4,8 @@ CFLAGS += -ansi -Wall
 trtty: LDLIBS += -lutil
 
 all: trickle trtty
-clean: ; rm -f trickle trtty
+clean: ; rm -f trickle trtty *.o
+trickle.o: trickle.h
+trtty.o: trickle.h
 
 .PHONY: all clean

@@ -1,6 +1,8 @@
 #define _BSD_SOURCE /* deprecated */
 #define _DEFAULT_SOURCE
 
+#define USAGE "usage: trtty [-b BITRATE] COMMAND [ARG ...]"
+
 #include <sys/param.h>
 #include <sys/types.h>
 #include <sys/ioctl.h>
@@ -23,7 +25,7 @@
 # include <pty.h>
 #endif
 
-#define USAGE "usage: trtty [-b BITRATE] COMMAND [ARG ...]"
+#include "trickle.h"
 
 static int fdchild;
 static struct termios termios_orig;
@@ -50,41 +52,15 @@ restoreterm(void)
 int
 main(int argc, char **argv)
 {
-	long rate = 600;
-	int i;
-	char c, *rest;
-	double d;
-	struct timespec delay;
+	char c;
+	struct opts opts;
 	struct pollfd pollfds[2];
 	struct winsize winsize;
 	struct termios termios;
 
-	while ((i = getopt(argc, argv, "b:")) != -1) {
-		switch (i) {
-		case 'b':
-			d = strtod(optarg, &rest);
-			if (!*rest)
-				;
-			else if (!strcmp(rest, "k"))
-				d *= 1000;
-			else {
-				fputs("bad -b format\n", stderr);
-				return 1;
-			}
-			rate = (long)d;	
-			break;
-		default:
-			fputs(USAGE "\n", stderr);
-			return 1;
-		}
-	}
+	parseopts(argc, argv, &opts);
 
-	if (rate < 50 || rate > 57600) {
-		fputs("bad -b, must be 50-57600\n", stderr);
-		return 1;
-	}
-
-	if (!argv[optind]) {
+	if (!*opts.argv) {
 		fputs(USAGE "\n", stderr);
 		return 1;
 	}
@@ -96,9 +72,6 @@ main(int argc, char **argv)
 
 	pollfds[0].fd = STDIN_FILENO;
 	pollfds[0].events = POLLIN;
-
-	delay.tv_sec = 0;
-	delay.tv_nsec = 8e9 / rate;
 
 	if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &winsize) == -1) {
 		perror("TIOCGWINSZ ioctl");
@@ -112,7 +85,7 @@ main(int argc, char **argv)
 		perror("forkpty");
 		return 1;
 	case 0:
-		execvp(argv[optind], argv+optind);
+		execvp(*opts.argv, opts.argv);
 		perror("execvp");
 		return 1;
 	}
@@ -131,6 +104,8 @@ main(int argc, char **argv)
 		return -1;
 	}
 
+	pollfds[0].fd = STDIN_FILENO;
+	pollfds[0].events = POLLIN;
 	pollfds[1].fd = fdchild;
 	pollfds[1].events = POLLIN;
 
@@ -151,7 +126,7 @@ main(int argc, char **argv)
 				break;
 		}
 
-		nanosleep(&delay, NULL);
+		nanosleep(&opts.delay, NULL);
 	}
 
 	close(fdchild);
