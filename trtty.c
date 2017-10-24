@@ -1,7 +1,7 @@
 #define _BSD_SOURCE /* deprecated */
 #define _DEFAULT_SOURCE
 
-#define USAGE "usage: trtty [-b BITRATE] COMMAND [ARG ...]"
+#define USAGE "usage: trtty [-b BITRATE] [COMMAND [ARG ...]]"
 
 #include <sys/param.h>
 #include <sys/types.h>
@@ -52,18 +52,13 @@ restoreterm(void)
 int
 main(int argc, char **argv)
 {
-	char c;
+	char c, *shell;
 	struct opts opts;
 	struct pollfd pollfds[2];
 	struct winsize winsize;
 	struct termios termios;
 
 	parseopts(argc, argv, &opts);
-
-	if (!*opts.argv) {
-		fputs(USAGE "\n", stderr);
-		return 1;
-	}
 
 	if (!isatty(STDIN_FILENO) || !isatty(STDIN_FILENO)) {
 		fputs("not a tty\n", stderr);
@@ -85,8 +80,13 @@ main(int argc, char **argv)
 		perror("forkpty");
 		return 1;
 	case 0:
-		execvp(*opts.argv, opts.argv);
-		perror("execvp");
+		if (*opts.argv)
+			execvp(*opts.argv, opts.argv);
+		else if ((shell = getenv("SHELL")))
+			execl(shell, shell, NULL);
+		else
+			execl("/bin/sh", "/bin/sh", NULL);
+		perror("exec");
 		return 1;
 	}
 
