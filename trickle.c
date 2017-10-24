@@ -26,6 +26,7 @@
 #define USAGE "usage: trickle [-b BITRATE] [COMMAND ...]"
 
 static int fdchild;
+static struct termios termios_orig;
 
 static void
 onsigwinch(int sig)
@@ -38,6 +39,12 @@ onsigwinch(int sig)
 		return;
 
 	ioctl(fdchild, TIOCSWINSZ, &winsize);
+}
+
+static void
+restoreterm(void)
+{
+	tcsetattr(STDIN_FILENO, TCSADRAIN, &termios_orig);
 }
 
 int
@@ -111,9 +118,11 @@ main(int argc, char **argv)
 			return -1;
 		}
 
+		termios_orig = termios;
+		atexit(restoreterm);
 		cfmakeraw(&termios);
 
-		if (tcsetattr(STDIN_FILENO, TCSANOW, &termios) == -1) {
+		if (tcsetattr(STDIN_FILENO, TCSADRAIN, &termios) == -1) {
 			perror("tcsetattr");
 			return -1;
 		}
