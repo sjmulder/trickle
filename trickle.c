@@ -1,51 +1,12 @@
-#define _BSD_SOURCE /* deprecated */
-#define _DEFAULT_SOURCE
-
-#include <sys/param.h>
-#include <sys/types.h>
-#include <sys/ioctl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <errno.h>
 #include <getopt.h>
 #include <poll.h>
-#include <signal.h>
 #include <string.h>
-#include <termios.h>
 #include <time.h>
 
-#if defined(__APPLE__)
-# include <util.h>
-#elif defined(BSD)
-# include <libutil.h>
-#else
-# include <pty.h>
-#endif
-
-#define USAGE "usage: trickle [-b BITRATE] [COMMAND ...]"
-
-static int fdchild;
-static struct termios termios_orig;
-
-static void
-onsigwinch(int sig)
-{
-	struct winsize winsize;
-
-	if (!fdchild)
-		return;
-	if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &winsize) == -1)
-		return;
-
-	ioctl(fdchild, TIOCSWINSZ, &winsize);
-}
-
-static void
-restoreterm(void)
-{
-	tcsetattr(STDIN_FILENO, TCSADRAIN, &termios_orig);
-}
+#define USAGE "usage: trickle [-b BITRATE]"
 
 int
 main(int argc, char **argv)
@@ -55,9 +16,7 @@ main(int argc, char **argv)
 	char c, *rest;
 	double d;
 	struct timespec delay;
-	struct pollfd pollfds[2];
-	struct winsize winsize;
-	struct termios termios;
+	struct pollfd pollfd;
 
 	while ((i = getopt(argc, argv, "b:")) != -1) {
 		switch (i) {
@@ -84,89 +43,28 @@ main(int argc, char **argv)
 		return 1;
 	}
 
-	pollfds[0].fd = STDIN_FILENO;
-	pollfds[0].events = POLLIN;
+	if (argv[optind] || isatty(STDIN_FILENO)) {
+		fputs(USAGE "\n", stderr);
+		return 1;
+	}
+
+	pollfd.fd = STDIN_FILENO;
+	pollfd.events = POLLIN;
 
 	delay.tv_sec = 0;
 	delay.tv_nsec = 8e9 / rate;
 
-	if (argv[optind]) {
-		if (!isatty(STDIN_FILENO) || !isatty(STDIN_FILENO)) {
-			fputs("not a tty\n", stderr);
-			return 1;
+	while (1) {
+		poll(&pollfd, 1, 0);
+
+		if (pollfd.revents) {
+			if (read(STDIN_FILENO, &c, 1) != 1)
+				break;
+			if (write(STDOUT_FILENO, &c, 1) != 1)
+				break;
 		}
 
-		if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &winsize) == -1) {
-			perror("TIOCGWINSZ ioctl");
-			return 1;
-		}
-
-		signal(SIGWINCH, onsigwinch);
-
-		switch (forkpty(&fdchild, NULL, NULL, &winsize)) {
-		case -1:
-			perror("forkpty");
-			return 1;
-		case 0:
-			execvp(argv[optind], argv+optind);
-			perror("execvp");
-			return 1;
-		}
-
-		if (tcgetattr(STDIN_FILENO, &termios) == -1) {
-			perror("tcgetattr");
-			return -1;
-		}
-
-		termios_orig = termios;
-		atexit(restoreterm);
-		cfmakeraw(&termios);
-
-		if (tcsetattr(STDIN_FILENO, TCSADRAIN, &termios) == -1) {
-			perror("tcsetattr");
-			return -1;
-		}
-
-		pollfds[1].fd = fdchild;
-		pollfds[1].events = POLLIN;
-
-		while (1) {
-			poll(pollfds, 2, 0);
-
-			if (pollfds[0].revents) {
-				if (read(STDIN_FILENO, &c, 1) != 1)
-					break;
-				if (write(fdchild, &c, 1) != 1)
-					break;
-			}
-
-			if (pollfds[1].revents) {
-				if (read(fdchild, &c, 1) != 1)
-					break;
-				if (write(STDOUT_FILENO, &c, 1) != 1)
-					break;
-			}
-
-			nanosleep(&delay, NULL);
-		}
-
-		close(fdchild);
-	} else if (isatty(STDIN_FILENO)) {
-		fputs(USAGE "\n", stderr);
-		return 1;
-	} else {
-		while (1) {
-			poll(pollfds, 1, 0);
-
-			if (pollfds[0].revents) {
-				if (read(STDIN_FILENO, &c, 1) != 1)
-					break;
-				if (write(STDOUT_FILENO, &c, 1) != 1)
-					break;
-			}
-
-			nanosleep(&delay, NULL);
-		}
+		nanosleep(&delay, NULL);
 	}
 
 	return 0;

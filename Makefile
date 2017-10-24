@@ -1,7 +1,9 @@
 CFLAGS += -ansi -Wall
-LDLIBS = -lutil # for BSD, glibc, musl; not macOS
 
-all: trickle
-clean: ; rm -f trickle
+# for BSD, glibc, musl; not macOS
+trtty: LDLIBS += -lutil
+
+all: trickle trtty
+clean: ; rm -f trickle trtty
 
 .PHONY: all clean
