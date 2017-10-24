@@ -7,17 +7,33 @@
 #include <getopt.h>
 #include <libutil.h>
 #include <poll.h>
+#include <signal.h>
 #include <string.h>
 #include <termios.h>
 #include <time.h>
 
 #define USAGE "usage: trickle [-b BITRATE] [COMMAND ...]"
 
+int fdchild;
+
+static void
+onsigwinch(int sig)
+{
+	struct winsize winsize;
+
+	if (!fdchild)
+		return;
+	if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &winsize) == -1)
+		return;
+
+	ioctl(fdchild, TIOCSWINSZ, &winsize);
+}
+
 int
 main(int argc, char **argv)
 {
 	long rate = 600;
-	int i, fdchild = -1;
+	int i;
 	char c, *rest;
 	double d;
 	struct timespec delay;
@@ -66,6 +82,8 @@ main(int argc, char **argv)
 			perror("TIOCGWINSZ ioctl");
 			return 1;
 		}
+
+		signal(SIGWINCH, onsigwinch);
 
 		switch (forkpty(&fdchild, NULL, NULL, &winsize)) {
 		case -1:
@@ -134,7 +152,7 @@ main(int argc, char **argv)
 		return 1;
 	}
 
-	if (fdchild != -1)
+	if (fdchild)
 		close(fdchild);
 
 	return 0;
