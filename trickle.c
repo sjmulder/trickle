@@ -1,4 +1,5 @@
-#define _BSD_SOURCE
+#define _BSD_SOURCE /* deprecated */
+#define _DEFAULT_SOURCE
 
 #include <sys/param.h>
 #include <sys/types.h>
