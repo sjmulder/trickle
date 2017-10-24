@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <getopt.h>
-#include <poll.h>
 #include <string.h>
 #include <time.h>
 
@@ -16,7 +15,6 @@ main(int argc, char **argv)
 	char c, *rest;
 	double d;
 	struct timespec delay;
-	struct pollfd pollfd;
 
 	while ((i = getopt(argc, argv, "b:")) != -1) {
 		switch (i) {
@@ -48,21 +46,12 @@ main(int argc, char **argv)
 		return 1;
 	}
 
-	pollfd.fd = STDIN_FILENO;
-	pollfd.events = POLLIN;
-
 	delay.tv_sec = 0;
 	delay.tv_nsec = 8e9 / rate;
 
-	while (1) {
-		poll(&pollfd, 1, 0);
-
-		if (pollfd.revents) {
-			if (read(STDIN_FILENO, &c, 1) != 1)
-				break;
-			if (write(STDOUT_FILENO, &c, 1) != 1)
-				break;
-		}
+	while (read(STDIN_FILENO, &c, 1) == 1) {
+		if (write(STDOUT_FILENO, &c, 1) != 1)
+			break;
 
 		nanosleep(&delay, NULL);
 	}
