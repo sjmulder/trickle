@@ -1,7 +1,7 @@
 #define _BSD_SOURCE /* deprecated */
 #define _DEFAULT_SOURCE
 
-#define USAGE "usage: trtty [-b bitrate] [command ...]"
+#define USAGE "usage: tritty [-b bitrate] [command ...]"
 
 #include <sys/param.h>
 #include <sys/types.h>

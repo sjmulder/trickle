@@ -1,4 +1,4 @@
-trickle / trtty
+trickle / tritty
 
 Slow pipe and terminal.
 
@@ -24,19 +24,19 @@ Examples:
 The format for the -b (for 'baud') option is a number in range 50-57600. A
 decimal separator and 'k' suffix can be used as per the example above.
 
-TRTTY ('trickle tty') might be the more interesting version of this tool: it
+TRITTY ('trickle tty') might be the more interesting version of this tool: it
 spawns an interactive subterminal with very low throughput. It simulates the
 experience of using a terminal over a slow serial connection.
 
 Usage:
 
-  trtty [-b bitrate] [command ...]
+  tritty [-b bitrate] [command ...]
 
 Examples:
  
-  $ trtty -b14.4k elinks news.ycombinator.com
+  $ tritty -b14.4k elinks news.ycombinator.com
   
-  $ trtty -b2600 bash  # now in the trtty session
+  $ tritty -b2600 bash  # now in the tritty session
   $ man man
      ...
   $ exit

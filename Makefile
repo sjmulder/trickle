@@ -1,16 +1,16 @@
 CFLAGS += -ansi -Wall
 # required for BSD, glibc, musl; not macOS
-LDLIBS_trtty = $(LDFLAGS) -lutil
+LDLIBS_tritty = $(LDFLAGS) -lutil
 
-all: trickle trtty
+all: trickle tritty
 
 clean:
-	rm -f trickle trtty
+	rm -f trickle tritty
 
 trickle: trickle.c trickle.h
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LDLIBS)
 
-trtty: trtty.c trickle.h
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LDLIBS_trtty)
+tritty: tritty.c trickle.h
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LDLIBS_tritty)
 
 .PHONY: all clean
