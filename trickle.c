@@ -1,3 +1,5 @@
+#define _BSD_SOURCE
+
 #include <sys/types.h>
 #include <sys/ioctl.h>
 #include <stdio.h>
@@ -5,12 +7,17 @@
 #include <unistd.h>
 #include <errno.h>
 #include <getopt.h>
-#include <libutil.h>
 #include <poll.h>
 #include <signal.h>
 #include <string.h>
 #include <termios.h>
 #include <time.h>
+
+#ifdef __GLIBC__
+# include <pty.h>
+#else
+# include <libutil.h>
+#endif
 
 #define USAGE "usage: trickle [-b BITRATE] [COMMAND ...]"
 
