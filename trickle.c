@@ -1,5 +1,6 @@
 #define _BSD_SOURCE
 
+#include <sys/param.h>
 #include <sys/types.h>
 #include <sys/ioctl.h>
 #include <stdio.h>
@@ -13,10 +14,10 @@
 #include <termios.h>
 #include <time.h>
 
-#ifdef __GLIBC__
-# include <pty.h>
-#else
+#ifdef BSD
 # include <libutil.h>
+#else
+# include <pty.h>
 #endif
 
 #define USAGE "usage: trickle [-b BITRATE] [COMMAND ...]"
