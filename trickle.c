@@ -1,4 +1,4 @@
-#define USAGE "usage: trickle [-b BITRATE]"
+#define USAGE "usage: foo | trickle [-b BITRATE] | bar"
 
 #include <stdio.h>
 #include <stdlib.h>
