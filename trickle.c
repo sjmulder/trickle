@@ -15,7 +15,9 @@
 #include <termios.h>
 #include <time.h>
 
-#ifdef BSD
+#if defined(__APPLE__)
+# include <util.h>
+#elif defined(BSD)
 # include <libutil.h>
 #else
 # include <pty.h>
