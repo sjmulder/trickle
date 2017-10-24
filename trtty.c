@@ -130,6 +130,5 @@ main(int argc, char **argv)
 	}
 
 	close(fdchild);
-
 	return 0;
 }
