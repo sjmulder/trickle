@@ -1,5 +1,5 @@
 CFLAGS += -ansi -Wall
-# requried for BSD, glibc, musl; not macOS
+# required for BSD, glibc, musl; not macOS
 LDLIBS_trtty = $(LDFLAGS) -lutil
 
 all: trickle trtty
