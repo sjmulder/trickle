@@ -25,7 +25,7 @@
 
 #define USAGE "usage: trickle [-b BITRATE] [COMMAND ...]"
 
-int fdchild;
+static int fdchild;
 
 static void
 onsigwinch(int sig)
