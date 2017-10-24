@@ -149,6 +149,8 @@ main(int argc, char **argv)
 
 			nanosleep(&delay, NULL);
 		}
+
+		close(fdchild);
 	} else if (isatty(STDIN_FILENO)) {
 		fputs(USAGE "\n", stderr);
 		return 1;
@@ -166,14 +168,6 @@ main(int argc, char **argv)
 			nanosleep(&delay, NULL);
 		}
 	}
-
-	if (errno) {
-		perror("I/O error");
-		return 1;
-	}
-
-	if (fdchild)
-		close(fdchild);
 
 	return 0;
 }
