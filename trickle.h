@@ -1,3 +1,5 @@
+/* trickle.h - Copyright (c) 2017, Sijmen J. Mulder (see LICENSE) */
+
 struct opts {
 	struct timespec delay;
 	char **argv;

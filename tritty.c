@@ -1,3 +1,5 @@
+/* tritty.c - Copyright (c) 2017, Sijmen J. Mulder (see LICENSE) */
+
 #define _BSD_SOURCE /* deprecated */
 #define _DEFAULT_SOURCE
 
