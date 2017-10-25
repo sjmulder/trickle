@@ -26,7 +26,7 @@ decimal separator and 'k' suffix can be used as per the example above.
 
 TRITTY ('trickle tty') might be the more interesting version of this tool: it
 spawns an interactive subterminal with very low throughput. It simulates the
-experience of using a terminal over a slow serial connection.
+experience of using a terminal over a slow connection.
 
 Usage:
 
@@ -45,6 +45,18 @@ Examples:
 
 The command argument can be ommitted, in which case the default shell $SHELL
 will be used, or /bin/sh if $SHELL is not defined.
+
+Note that by only limiting throughput tritty does not accurately simulate the
+experience of using a serial device. In particular, it does not set the baud
+rate on the virtual terminal which software might use to adjust their output.
+
+Use stty from within a tritty session to adjust the boud rate attribute of the
+terminal, for example:
+
+  $ tritty -b2600
+  $ stty 2600
+
+tritty will restore the original settings on exit.
 
 Compatibility: tested on FreeBSD, macOS, Linux and Linux with musl.
 
