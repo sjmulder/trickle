@@ -1,0 +1,45 @@
+.Dd October 25, 2017
+.Dt TRICKLE 1
+.Os
+.Sh NAME
+.Nm trickle
+.Nd slow pipe
+.Sh SYNOPSIS
+.Nm trickle
+.Op Fl b Ar bitrate
+.Sh DESCRIPTION
+.Nm
+is used as part of a shell pipeline and has very low throughput,
+hence the name: data trickles through the pipe.
+By default, it passes on 600 bits per second,
+but this can be configured with the
+.Fl b
+(for
+.Sq baud ,
+bits per second) flag.
+.Pp
+.Ar bitrate
+must be a number in range 50\(en57600.
+A decimal separator and decimal
+.Sq k
+suffix can be used.
+.Sh EXAMPLES
+Print
+.Li README
+to the terminal at 600 baud:
+.Pp
+.Dl $ trickle <README
+.Pp
+List files at 2600 baud:
+.Pp
+.Dl $ ls | trickle -b2600
+.Pp
+List files at 57600 baud:
+.Pp
+.Dl $ ls | trickle -b57.6k
+.Sh SEE ALSO
+.Xr tritty 1 ,
+.Xr pv 1 Fl L
+.Sh AUTHORS
+.An Sijmen J. Mulder
+.Aq Mt ik@sjmulder.nl .

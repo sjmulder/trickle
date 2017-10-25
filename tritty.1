@@ -1,0 +1,80 @@
+.Dd October 25, 2017
+.Dt TRITTY 1
+.Os
+.Sh NAME
+.Nm tritty
+.Nd slow terminal
+.Sh SYNOPSIS
+.Nm tritty
+.Op Fl b Ar bitrate
+.Op Ar command ...
+.Sh DESCRIPTION
+.Nm
+.Pq Sq trickle tty
+spawns an interactive subterminal with very low throughput.
+It simulates the experience of using a terminal over a slow connection.
+.Pp
+By default, it runs at 600 bits per second
+.Pq full duplex
+but this can be configured with the
+.Fl b
+(for
+.Sq baud ,
+bits per second) flag.
+.Pp
+.Ar bitrate
+must be a number in range 50\(en57600.
+A decimal separator and decimal
+.Sq k
+suffix can be used.
+.Pp
+.Ar command
+will be executed inside the virtual terminal. It defaults to the
+.Ev SHELL
+environment variable, or
+.Pa /bin/sh
+if unset.
+.Pp
+Note that by only limiting throughput the serial device experience is not
+accurately simulated.
+In particular, the baud rate attribute on the virtual terminal is not set.
+Software may use this attribute to adjust their output.
+.Pp
+Use
+.Xr stty 1
+from within a
+.Nm
+session to adjust the baud rate attribute of the terminal as shown in the
+examples below.
+The original settings will be restored on exit.
+.Sh EXAMPLES
+Browse the web with a 14400 baud terminal:
+.Pp
+.Dl $ tritty -b14.4 elinks news.ycombinator.com
+.Pp
+Run the default shell at 2600 baud:
+.Pp
+.Bd -literal -offset indent
+$ tritty -b2600   # now in the tritty session
+$ man man
+   ...
+$ exit
+exit
+$                 # back to regular terminal
+.Ed
+.Pp
+Run the default shell at 300 baud,
+also setting the terminal baud rate attribute:
+.Pp
+.Bd -literal -offset indent
+$ tritty -b300
+$ sty 300
+   ...
+$ exit
+.Ed
+.Sh SEE ALSO
+.Xr trickle 1 ,
+.Xr stty 1
+.Sh AUTHORS
+.An Sijmen J. Mulder
+.Aq Mt ik@sjmulder.nl .
