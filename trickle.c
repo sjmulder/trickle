@@ -1,3 +1,6 @@
+#define _BSD_SOURCE /* deprecated */
+#define _DEFAULT_SOURCE
+
 #define USAGE \
 "usage: trickle [-b bitrate] <file\n" \
 "   or  ... | trickle [-b bitrate]"
