@@ -2,7 +2,10 @@ trickle / tritty
 
 Slow pipe and terminal.
 
-TRICKLE is used as part of a shell pipeline and had very low throughput,
+
+TRICKLE
+
+trickle is used as part of a shell pipeline and had very low throughput,
 hence the name: data trickles through the pipe. By default, it passes on 600
 bits per second, but this can be configured with the -b flag.
 
@@ -24,7 +27,10 @@ Examples:
 The format for the -b (for 'baud') option is a number in range 50-57600. A
 decimal separator and 'k' suffix can be used as per the example above.
 
-TRITTY ('trickle tty') might be the more interesting version of this tool: it
+
+TRITTY
+
+tritty ('trickle tty') might be the more interesting version of this tool: it
 spawns an interactive subterminal with very low throughput. It simulates the
 experience of using a terminal over a slow connection.
 
@@ -41,7 +47,7 @@ Examples:
      ...
   $ exit
   exit
-  $                    # back to regular terminal
+  $                     # back to regular terminal
 
 The command argument can be ommitted, in which case the default shell $SHELL
 will be used, or /bin/sh if $SHELL is not defined.
@@ -58,10 +64,17 @@ terminal, for example:
 
 tritty will restore the original settings on exit.
 
-Compatibility: tested on FreeBSD, macOS, Linux and Linux with musl.
 
-Building: after tweaking the Makefile if desired,
+BUILDING
+
+Should work on most Unix-like systems, perhaps with some tweaks. Tested on
+FreeBSD, macOS, Linux and Linux with musl.
+
+After tweaking the Makefile if desired:
 
   make
+
+
+AUTHOR
 
 By Sijmen J. Mulder <ik@sjmulder.nl>
