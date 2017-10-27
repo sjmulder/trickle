@@ -53,9 +53,9 @@ restored on exit.
 Examples
 --------
 
-Print *README* to the terminal at 600 baud:
+Print *README.rm* to the terminal at 600 baud:
 
-    $ trickle <README
+    $ trickle <README.rm
 
 List files at 2600 baud:
 
