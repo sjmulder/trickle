@@ -1,4 +1,4 @@
-/* trickle.h - Copyright (c) 2017, Sijmen J. Mulder (see LICENSE) */
+/* trickle.h - Copyright (c) 2017, Sijmen J. Mulder (see LICENSE.md) */
 
 struct opts {
 	struct timespec delay;
