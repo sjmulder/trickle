@@ -23,7 +23,7 @@ uninstall:
 	      $(PREFIX)/share/man/man1/tritty.1 \
 	      $(PREFIX)/share/doc/trickle/README.md \
 	      $(PREFIX)/share/doc/trickle/LICENSE.md
-	rmdir -p $(PREFIX)/share/doc/trickle/
+	-rmdir $(PREFIX)/share/doc/trickle/
 
 trickle: trickle.c trickle.h
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LDLIBS)
