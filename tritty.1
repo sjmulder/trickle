@@ -53,7 +53,6 @@ Browse the web with a 14400 baud terminal:
 .Dl $ tritty -b14.4 elinks news.ycombinator.com
 .Pp
 Run the default shell at 2600 baud:
-.Pp
 .Bd -literal -offset indent
 $ tritty -b2600   # now in the tritty session
 $ man man
@@ -65,7 +64,6 @@ $                 # back to regular terminal
 .Pp
 Run the default shell at 300 baud,
 also setting the terminal baud rate attribute:
-.Pp
 .Bd -literal -offset indent
 $ tritty -b300
 $ sty 300
@@ -73,8 +71,8 @@ $ sty 300
 $ exit
 .Ed
 .Sh SEE ALSO
-.Xr trickle 1 ,
-.Xr stty 1
+.Xr stty 1 ,
+.Xr trickle 1
 .Sh AUTHORS
 .An Sijmen J. Mulder
 .Aq Mt ik@sjmulder.nl .
