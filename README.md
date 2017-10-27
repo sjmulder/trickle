@@ -92,9 +92,12 @@ Building
 Should work on most Unix-like systems, perhaps with some tweaks. Tested on
 FreeBSD, macOS, Linux and Linux with musl.
 
-After tweaking the Makefile if desired:
+Edit the Makefile if desired. Then:
 
     make
+
+There are *install* and *uninstall* targets, too. *PREFIX* is set to
+*/usr/local* by default.
 
 Author
 ------
