@@ -17,24 +17,23 @@ It simulates the experience of using a terminal over a slow connection.
 .Pp
 By default, it runs at 600 bits per second
 .Pq full duplex
-but this can be configured with the
-.Fl b
-(for
+but this can be configured:
+.Bl -tag -width Ds
+.It Fl b Ar bitrate
+(For
 .Sq baud ,
-bits per second) flag.
-.Pp
-.Ar bitrate
-must be a number in range 50\(en57600.
+bits per second.)
+Must be a number in range 50\(en57600.
 A decimal separator and decimal
 .Sq k
 suffix can be used.
-.Pp
-.Ar command
-will be executed inside the virtual terminal. It defaults to the
+.It Ar command
+Will be executed inside the virtual terminal. It defaults to the
 .Ev SHELL
 environment variable, or
 .Pa /bin/sh
 if unset.
+.El
 .Pp
 Note that by only limiting throughput the serial device experience is not
 accurately simulated.

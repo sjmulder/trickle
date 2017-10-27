@@ -13,17 +13,17 @@
 is used as part of a shell pipeline and has very low throughput,
 hence the name: data trickles through the pipe.
 By default, it passes on 600 bits per second,
-but this can be configured with the
-.Fl b
-(for
+but this can be configured:
+.Bl -tag -width Ds
+.It Fl b Ar bitrate
+(For
 .Sq baud ,
-bits per second) flag.
-.Pp
-.Ar bitrate
-must be a number in range 50\(en57600.
+bits per second.)
+Must be a number in range 50\(en57600.
 A decimal separator and decimal
 .Sq k
 suffix can be used.
+.El
 .Sh EXAMPLES
 Print
 .Li README
