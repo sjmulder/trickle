@@ -6,6 +6,9 @@ Slow pipe and terminal.
  * Website: https://github.com/sjmulder/trickle
  * Video: https://asciinema.org/a/143994
 
+**macOS note**: Homebrew users can easily install trickle and tritty with the
+formula at https://github.com/nickolasburr/homebrew-pfa
+
 trickle
 -------
 
