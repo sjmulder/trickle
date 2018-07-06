@@ -19,10 +19,10 @@
 #include <termios.h>
 #include <time.h>
 
-#if defined(__APPLE__)
-# include <util.h>
-#elif defined(BSD)
+#if defined(__FreeBSD__)
 # include <libutil.h>
+#elif defined(__APPLE__) || defined(BSD)
+# include <util.h>
 #else
 # include <pty.h>
 #endif
