@@ -4,7 +4,8 @@ bindir  ?= $(prefix)/bin
 man1dir ?= $(prefix)/man/man1
 
 CFLAGS += -ansi -g
-CFLAGS += -D_POSIX_C_SOURCE=199309L
+# for SIGWINCH and cfmakeraw()
+CFLAGS += -D_BSD_SOURCE
 CFLAGS += -Wall -Wextra -pedantic
 
 # required for BSD, glibc, musl; not macOS
