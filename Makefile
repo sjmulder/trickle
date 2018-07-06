@@ -6,6 +6,8 @@ man1dir ?= $(prefix)/man/man1
 CFLAGS += -ansi -g
 # for SIGWINCH and cfmakeraw()
 CFLAGS += -D_BSD_SOURCE
+# for nanosleep() on GNU
+CFLAGS += -D_GNU_SOURCE
 CFLAGS += -Wall -Wextra -pedantic
 
 # required for BSD, glibc, musl; not macOS
