@@ -37,6 +37,8 @@ onsigwinch(int sig)
 {
 	struct winsize winsize;
 
+	(void)sig;
+
 	if (!fdchild)
 		return;
 	if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &winsize) == -1)
