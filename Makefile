@@ -1,7 +1,6 @@
-# BSD conventions by default, override to taste
-prefix  ?= /usr/local
-bindir  ?= $(prefix)/bin
-man1dir ?= $(prefix)/man/man1
+DESTDIR   ?=
+PREFIX    ?= /usr/local
+MANPREFIX ?= $(PREFIX)/man
 
 CFLAGS += -ansi -g
 # for SIGWINCH and cfmakeraw()
@@ -19,15 +18,15 @@ clean:
 	rm -f trickle tritty
 
 install: trickle tritty
-	install -d $(bindir) $(man1dir)
-	install trickle tritty $(bindir)/
-	install trickle.1 tritty.1 $(man1dir)/
+	install -d $(DESTDIR)$(PREFIX)/bin $(DESTDIR)$(MANPREFIX)/man1
+	install trickle   tritty   $(DESTDIR)$(PREFIX)/bin/
+	install trickle.1 tritty.1 $(DESTDIR)$(MANPREFIX)/man1/
 
 uninstall:
-	rm -f $(bindir)/trickle \
-	      $(bindir)/trittty \
-	      $(man1dir)/trickle.1 \
-	      $(man1dir)/tritty.1
+	rm -f $(DESTDIR)$(PREFIX)/bin/trickle
+	rm -f $(DESTDIR)$(PREFIX)/bin/tritty
+	rm -f $(DESTDIR)$(MANPREFIX)/man1/trickle.1
+	rm -f $(DESTDIR)$(MANPREFIX)/man1/tritty.1
 
 trickle: trickle.c trickle.h
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LDLIBS)
