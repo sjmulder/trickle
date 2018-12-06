@@ -19,8 +19,8 @@ clean:
 
 install: trickle tritty
 	install -d $(DESTDIR)$(PREFIX)/bin $(DESTDIR)$(MANPREFIX)/man1
-	install trickle   tritty   $(DESTDIR)$(PREFIX)/bin/
-	install trickle.1 tritty.1 $(DESTDIR)$(MANPREFIX)/man1/
+	install -m755 trickle   tritty   $(DESTDIR)$(PREFIX)/bin/
+	install -m644 trickle.1 tritty.1 $(DESTDIR)$(MANPREFIX)/man1/
 
 uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/bin/trickle
